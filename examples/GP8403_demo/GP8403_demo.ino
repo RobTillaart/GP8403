@@ -1,9 +1,8 @@
 //
 //    FILE: GP8403_demo.ino
 //  AUTHOR: Rob Tillaart
-// PURPOSE: test basic behaviour
+// PURPOSE: test basic behaviour and performance
 //     URL: https://github.com/RobTillaart/GP8403
-
 
 #include "Arduino.h"
 #include "Wire.h"
@@ -33,8 +32,8 @@ void loop()
   //  sawtooth 1 = falling
   for (int i = 0; i < 4095; i++)
   {
-    setValue(0, i);
-    setValue(1, 4095 - i);
+    myDAC.setValue(0, i);
+    myDAC.setValue(1, 4095 - i);
     delay(1);
   }
   delay(2000);
