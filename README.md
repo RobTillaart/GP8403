@@ -20,16 +20,29 @@ Arduino library for GP8403, I2C 12 bit two channel DAC.
 
 This library is for the I2C GP8403 12 bit two channel DAC.
 
+The GP8403 accepts values from 0 to 4095.
 
-|              |  GP8403     |
-|:-------------|------------:|
+Besides the core **setValue(channel, value)** the library provides
+convenience functions **setPercentage(channel, perc)**, **increment()**
+ and **decrement()**.
+Furthermore is allows to read back (from cache) the current value
+per channel.
+
+What makes the GP8403 different from other DAC's it that it has the
+option to switch its output range from 5V to 10V. 
+Please note this is done for both channels, so one cannot set the 
+voltage per channel. So use with care!
+
+
+|              |  GP8403     |  Notes  |
+|:-------------|------------:|:--------|
 |  Range       |  5 or 10 V  |
 |  Resolution  |  12 bit     |
 |  Channels    |   2         |
-|  Error       |   0.5 %     |
+|  Max error   |   0.5 %     |
+|  Max I2C     |  400 kHz    | to be verified
 
 Feedback as always is welcome.
-
 
 
 ### Warning
@@ -149,7 +162,7 @@ TODO: run performance sketch on hardware.
 - **bool begin()** checks if device is visible on the I2C bus.
 Sets default range to 5 Volt.
 - **bool isConnected()** Checks if device address can be found on I2C bus.
-- **uint8_t getAddress()** Returns the fixed address 0x2A (42).
+- **uint8_t getAddress()** Returns the address set in constructor.
 - **bool setRange(uint8_t range)** Range can be 5 or 10 volt.
 All other values map to 5 Volt.
 - **uint8_t getRange()** idem, returns 0 if not initialized.
@@ -199,15 +212,16 @@ if parameter out of range, or if setting fails.
 - investigate storage settings for startup
   - non standard I2C commands.
 - investigate performance
-  - writing lower 4 bits only works?
-  - I2C performance up to clock?
+  - writing e.g. lower 4 bits only works?
+  - 8 bit API by writing only higher 8 bits?
 
 #### Could
 
-- extend unit tests if possible
-- auto adjust range **set- getVoltage()**
+- extend unit tests if possible.
+- auto adjust range **set- getVoltage()**?
 - is it possible to write 0x10 or 0x01 to register 1
   and set output voltage per channel?
+  - not documented.
 
 
 #### Wont
