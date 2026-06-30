@@ -10,12 +10,12 @@
 #include "GP8403.h"
 
 
-//  REGISTER      DESCRIPTION            BITS
+//  REGISTER      DESCRIPTION            BITS     NOTES
 //  0x00          GP8403_??                8
 //  0x01          GP8403_CONFIGURATION     8
-//  0x02          GP8403_DAC0_LOW          8
+//  0x02          GP8403_DAC0_LOW          8      upper 4 bits!
 //  0x03          GP8403_DAC0_HIGH         8
-//  0x04          GP8403_DAC1_LOW          8
+//  0x04          GP8403_DAC1_LOW          8      upper 4 bits!
 //  0x05          GP8403_DAC1_HIGH         8
 
 
@@ -40,13 +40,13 @@ GP8403::GP8403(uint8_t address, TwoWire *wire)
 //  range as parameter?
 bool GP8403::begin()
 {
-  //  TODO reset variables?
-  _error = GP8403_OK;
-
   if (! isConnected())
   {
+    //  _error = ?
     return false;
   }
+  // reset variables
+  _error = GP8403_OK;
   setRange(5);
   return true;
 }
@@ -181,29 +181,6 @@ int GP8403::_writeRegister16(uint8_t reg, uint16_t value)
   _wire->write(value >> 8);
   return _wire->endTransmission();
 }
-
-int GP8403::_request(uint8_t * arr, uint8_t size)
-{
-  uint8_t bytes = _wire->requestFrom(_address, size);
-  if (bytes == 0)
-  {
-    _error = -1;
-    return _error;
-  }
-  if (bytes < size)
-  {
-    _error = -2;
-    return _error;
-  }
-
-  for (uint8_t i; i < size; i++)
-  {
-    arr[i] = _wire->read();
-  }
-  _error = 0;
-  return _error;
-}
-
 
 
 //  -- END OF FILE --

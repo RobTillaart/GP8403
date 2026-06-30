@@ -34,7 +34,7 @@ public:
 
   //  range = 5 or 10 V, 5 = default.
   bool     setRange(uint8_t range);
-  uint8_t  getRange();  //  return 0 if not initialized.
+  uint8_t  getRange();  //  returns 0 if not initialized.
 
   uint8_t  channels();
   uint16_t maxValue();  //  0x0FFF
@@ -44,7 +44,7 @@ public:
   bool     setValue(uint8_t channel, uint16_t value);
   uint16_t getValue(uint8_t channel);
 
-  //       return false if end of range.
+  //       return false if at end of range.
   bool     increment(uint8_t channel);
   bool     decrement(uint8_t channel);
 
@@ -63,12 +63,11 @@ protected:
 
   int      _writeRegister8(uint8_t reg, uint8_t value);
   int      _writeRegister16(uint8_t reg, uint16_t value);
-  int      _request(uint8_t * arr, uint8_t size);
 
   uint8_t  _channels;  //  Number of DAC-Channels of a given Chip
   uint16_t _maxValue;  //  Maximum value of a given Chip
-  uint16_t _value[2];  //  Current value  (cache for performance)
-  uint8_t  _range;     //  Current range  (cache for performance)
+  uint16_t _value[2];  //  Current value  (cache)
+  uint8_t  _range;     //  Current range  (cache)
 
   uint8_t  _error;
 };
@@ -77,12 +76,14 @@ protected:
 
 ///////////////////////////////////////////////////
 //
-//  DERIVED GP8413  TODO
+//  DERIVED GP8413
 //
 //  class GP8413 : public GP8403
 //  {
 //    GP8413(uint8_t address, TwoWire *wire = &Wire);
+//    bool     setValue(uint8_t channel, uint16_t value);  //  15 bit
 //  };
+
 
 //  -- END OF FILE --
 

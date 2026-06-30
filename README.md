@@ -70,15 +70,24 @@ and any other applications that may cause personal injury due to the product's f
 
 ### Related
 
-- https://github.com/RobTillaart/GP8403
-- https://github.com/RobTillaart/GP8403
+- https://github.com/robtillaart/AD5370 40 channel 16 bit DAC SPI
+- https://github.com/RobTillaart/AD5680 1 channel 18 bit DAC SPI
+- https://github.com/RobTillaart/AD7390 1 channel 12/10 bit SPI
+- https://github.com/RobTillaart/DAC8550 1 channel, 16 bit
+- https://github.com/RobTillaart/DAC8551 1 channel, 16 bit
+- https://github.com/RobTillaart/DAC8552 2 channel, 16 bit
+- https://github.com/RobTillaart/DAC8554 4 channel, 16 bit
+- https://github.com/RobTillaart/GP8403 I2C, 2 channel, 12 bit
+- https://github.com/RobTillaart/MAX520 I2C, 4, 8 channel, 8 bit
+- https://github.com/RobTillaart/MCP4725 I2C, 1 channel, 12 bit
+- https://github.com/RobTillaart/MCP_DAC SPI based DACs
 
 
 ## I2C
 
 ### I2C Address
 
-The device has a configurable address from 0x38(56) ..0x3F(63).
+The device has a configurable address from 0x38..0x3F (== 56..63).
 The address is configured by hardware with the A0, A1 and A2 pins.
 
 Do not forget appropriate pull up resistors on the I2C SDA and SCL lines.
@@ -125,7 +134,7 @@ Only test **setValue()** as that is the main function.
 |   600 KHz  |             |
 
 
-TODO: write and run performance sketch on hardware.
+TODO: run performance sketch on hardware.
 
 
 ## Interface
@@ -145,8 +154,10 @@ Sets default range to 5 Volt.
 All other values map to 5 Volt.
 - **uint8_t getRange()** idem, returns 0 if not initialized.
 
-Note: range is set for both channels at the same time, so it is not 
-possible to have one channel 0..5V and the other 0..10V.
+**Warning**: the range is set for both channels at the same time.
+Changing the range will bump both outputs by a factor 2 up or down.
+This can result in unexpected behaviour including damage to connected 
+devices. So use with care.
 
 - **uint8_t channels()** returns 2
 - **uint16_t maxValue()** returns 0x0FFF = 4095
@@ -180,9 +191,13 @@ if parameter out of range, or if setting fails.
 - writing both channels in one call?
   - same latching time! (assumption)
   - writing both DAC's e.g. zero.
-- GP8413 derived class?
+- investigate compatibles
+  - GP8413 - 15 bit 2 channel
+- can values be read back from DAC?
+  - slower but more accurate.
 - improve error handling
 - investigate storage settings for startup
+  - non standard I2C commands.
 - investigate performance
   - writing lower 4 bits only works?
   - I2C performance up to clock?
@@ -191,9 +206,14 @@ if parameter out of range, or if setting fails.
 
 - extend unit tests if possible
 - auto adjust range **set- getVoltage()**
+- is it possible to write 0x10 or 0x01 to register 1
+  and set output voltage per channel?
+
 
 #### Wont
 
+- related but not derived => own libs
+  - GP8302, GP8211, GP8503, GP8512
 
 ## Support
 
